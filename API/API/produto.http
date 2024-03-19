@@ -1,0 +1,7 @@
+### Listagem de produtos
+
+GET http://localhost:5181/api/produtos
+
+### Cadastro de Produtos
+
+POST http://localhost:5181/api/produtos

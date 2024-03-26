@@ -1,7 +1,8 @@
 ### Listagem de produtos
-
-GET http://localhost:5181/api/produtos
+GET http://localhost:5181/api/produtos/listar
 
 ### Cadastro de Produtos
+POST http://localhost:5181/api/produtos/cadastrar
 
-POST http://localhost:5181/api/produtos
+### Buscar Produto 
+GET http://localhost:5181/api/produtos/buscar/carro

@@ -2,7 +2,7 @@
 GET http://localhost:5181/api/produtos/listar
 
 ### Cadastro de Produtos
-POST http://localhost:5181/api/produtos/cadastrar
+POST http://localhost:5181/api/produtos/cadastrar/iPhone/iOS
 
 ### Buscar Produto 
-GET http://localhost:5181/api/produtos/buscar/carro
+GET http://localhost:5181/api/produtos/buscar/Carro

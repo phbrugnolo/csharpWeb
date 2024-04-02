@@ -16,25 +16,42 @@ List<Produto> listaProdutos = new List<Produto>(){
 
 //End Points
 //Cadastrar um produto na lista
-// a) Atraves das informações da url
-// b) Atraves das informações no corpo da requisação
-// Realizar as operações de alterções e remoção da lista
-app.MapPost("/api/produtos/cadastrar/{nome}/{descricao}", ([FromRoute] string nome, [FromRoute] string descricao) => {
 
-    // Preenchendo pelo constructor
-    Produto produto = new Produto(nome, descricao, "Active", 123);
-
-    //Preenchendo pelo atributo
-    produto.Nome = nome;
-    produto.Descricao = descricao;
-    produto.Status = "Active";
-    produto.Preco = 123;
-
-    //Adicionando o produto dentra da lista
+app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto) => {
+    //Adicionando o produto dentro da lista
     listaProdutos.Add(produto);
     return Results.Created("", produto);
 });
 
+// Deletando Produto
+app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome) => {
+
+    for (int i = 0; i < listaProdutos.Count; i++)
+    {
+        if (listaProdutos[i].Nome == nome)
+        {
+            listaProdutos.Remove(listaProdutos[i]);
+            return Results.Ok("Produto removido com suceso");
+        }
+    }
+    return Results.NotFound("Produto não Encontrado");
+});
+
+app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado) => {
+
+    for (int i = 0; i < listaProdutos.Count; i++)
+    {
+        if (listaProdutos[i].Nome == nome)
+        {
+            listaProdutos[i].Nome = pAtualizado.Nome;
+            listaProdutos[i].Descricao = pAtualizado.Descricao;
+            listaProdutos[i].Status = pAtualizado.Status;
+            listaProdutos[i].Preco = pAtualizado.Preco;
+            return Results.Ok("Produto editado com suceso");
+        }
+    }
+    return Results.NotFound("Produto não Encotrado");
+});
 //GET  http://localhost:{porta}/api/produtos
 app.MapGet("/api/produtos/listar", () => listaProdutos);
 

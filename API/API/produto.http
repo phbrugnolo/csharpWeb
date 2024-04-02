@@ -2,7 +2,29 @@
 GET http://localhost:5181/api/produtos/listar
 
 ### Cadastro de Produtos
-POST http://localhost:5181/api/produtos/cadastrar/iPhone/iOS
+POST http://localhost:5181/api/produtos/cadastrar
+Content-Type: application/json
+
+{
+    "nome": "iPhone",
+    "descricao": "iOS",
+    "status": "Active",
+    "preco": 8990.99
+}
 
 ### Buscar Produto 
 GET http://localhost:5181/api/produtos/buscar/Carro
+
+### Deletar
+DELETE http://localhost:5181/api/produtos/remover/iPhone
+
+### 
+PUT http://localhost:5181/api/produtos/edit/Carro
+Content-Type: application/json
+
+{
+    "nome": "Mustang GT",
+    "descricao": "Super Veloz",
+    "status": "Active",
+    "preco": 200000
+}

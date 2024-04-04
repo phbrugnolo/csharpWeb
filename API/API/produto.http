@@ -16,7 +16,7 @@ Content-Type: application/json
 GET http://localhost:5181/api/produtos/buscar/Carro
 
 ### Deletar
-DELETE http://localhost:5181/api/produtos/remover/iPhone
+DELETE http://localhost:5181/api/produtos/remover/Celular
 
 ### 
 PUT http://localhost:5181/api/produtos/edit/Carro

@@ -2,13 +2,6 @@
 
 public class Produto
 {
-
-    public Produto()
-    {
-        CriadoEm = DateTime.Now;
-        Id = Guid.NewGuid().ToString();
-    }
-
     public Produto(string nome, string descricao, string status, double preco)
     {
         Nome = nome;

@@ -2,71 +2,74 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+//Registrar o serviço do banco de dados na aplicação
+builder.Services.AddDbContext<AppDataContext>();
 var app = builder.Build();
 
 
-List<Produto> listaProdutos = new List<Produto>(){
-    new Produto("Celular", "Android", "Active", 1700.00),
-    new Produto("Carro", "Veloz", "Inactive", 20000.00),
-    new Produto("Computador", "Gamer", "Active", 7850.99),
-    new Produto("Mouse", "Ergonomico", "Active", 10.99)
-
-};
+List<Produto> Produtos = new List<Produto>();
 
 
 //End Points
 //Cadastrar um produto na lista
 
-app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto) => {
-    //Adicionando o produto dentro da lista
-    listaProdutos.Add(produto);
+app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto, [FromServices] AppDataContext context) =>
+{
+    //Adicionando o produto dentro da tabela do banco
+    context.Produtos.Add(produto);
+    context.SaveChanges();
     return Results.Created("", produto);
 });
 
-// Deletando Produto
-app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome) => {
+//GET  http://localhost:{porta}/api/produtos
+app.MapGet("/api/produtos/listar", ([FromServices] AppDataContext context) => {
 
-    for (int i = 0; i < listaProdutos.Count; i++)
+    if(context.Produtos.Any()) return Results.Ok(context.Produtos.ToList());
+    return Results.NotFound("Produto não encontrado");
+
+});
+
+// Deletando Produto
+app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome) =>
+{
+
+    for (int i = 0; i < Produtos.Count; i++)
     {
-        if (listaProdutos[i].Nome == nome)
+        if (Produtos[i].Nome == nome)
         {
-            listaProdutos.Remove(listaProdutos[i]);
+            Produtos.Remove(Produtos[i]);
             return Results.Ok("Produto removido com suceso");
         }
     }
     return Results.NotFound("Produto não Encontrado");
 });
 
-app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado) => {
+app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado) =>
+{
 
-    for (int i = 0; i < listaProdutos.Count; i++)
+    for (int i = 0; i < Produtos.Count; i++)
     {
-        if (listaProdutos[i].Nome == nome)
+        if (Produtos[i].Nome == nome)
         {
-            listaProdutos[i].Nome = pAtualizado.Nome;
-            listaProdutos[i].Descricao = pAtualizado.Descricao;
-            listaProdutos[i].Status = pAtualizado.Status;
-            listaProdutos[i].Preco = pAtualizado.Preco;
+            Produtos[i].Nome = pAtualizado.Nome;
+            Produtos[i].Descricao = pAtualizado.Descricao;
+            Produtos[i].Status = pAtualizado.Status;
+            Produtos[i].Preco = pAtualizado.Preco;
             return Results.Ok("Produto editado com suceso");
         }
     }
     return Results.NotFound("Produto não Encotrado");
 });
-//GET  http://localhost:{porta}/api/produtos
-app.MapGet("/api/produtos/listar", () => listaProdutos);
 
 //GET  http://localhost:{porta}/api/buscar{product.nome}
-app.MapGet("/api/produtos/buscar/{nome}", ([FromRoute] string nome) =>
+app.MapGet("/api/produtos/buscar/{nome}", ([FromRoute] string nome, [FromServices] AppDataContext context) =>
 {
     //Endpoint com várias linhas de código 
-    for (int i = 0; i < listaProdutos.Count; i++)
-    {
-        if (listaProdutos[i].Nome == nome)
-        {
-            return Results.Ok(listaProdutos[i]);
-        }
-    }
-    return Results.NotFound("Produto não Encotrado");
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
+
+    if (produto is null) return Results.NotFound("Produto não Encotrado");
+    return Results.Ok(produto);
+   
 });
 
 

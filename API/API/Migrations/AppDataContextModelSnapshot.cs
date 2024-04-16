@@ -34,6 +34,9 @@ namespace API.Migrations
                     b.Property<double>("Preco")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
 

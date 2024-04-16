@@ -6,20 +6,20 @@ POST http://localhost:5181/api/produtos/cadastrar
 Content-Type: application/json
 
 {
-    "nome": "iPhone",
-    "descricao": "iOS",
+    "nome": "Samsung",
+    "descricao": "J5 prime",
     "status": "Active",
-    "preco": 8990.99
+    "preco": 400.99
 }
 
 ### Buscar Produto 
-GET http://localhost:5181/api/produtos/buscar/Carro
+GET http://localhost:5181/api/produtos/buscar/iPhone
 
 ### Deletar
-DELETE http://localhost:5181/api/produtos/remover/iPhone
+DELETE http://localhost:5181/api/produtos/remover/Samsung
 
 ### 
-PUT http://localhost:5181/api/produtos/edit/Carro
+PUT http://localhost:5181/api/produtos/edit/Samsung
 Content-Type: application/json
 
 {

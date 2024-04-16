@@ -30,34 +30,35 @@ app.MapGet("/api/produtos/listar", ([FromServices] AppDataContext context) => {
 });
 
 // Deletando Produto
-app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome) =>
+app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome, [FromServices] AppDataContext context) =>
 {
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
 
-    for (int i = 0; i < Produtos.Count; i++)
-    {
-        if (Produtos[i].Nome == nome)
+        if (produto is not null)
         {
-            Produtos.Remove(Produtos[i]);
+            context.Produtos.Remove(produto);
+            context.SaveChanges();
             return Results.Ok("Produto removido com suceso");
         }
-    }
+
     return Results.NotFound("Produto não Encontrado");
 });
 
-app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado) =>
+app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado, [FromServices] AppDataContext context) =>
 {
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
 
-    for (int i = 0; i < Produtos.Count; i++)
-    {
-        if (Produtos[i].Nome == nome)
+        if (produto is not null)
         {
-            Produtos[i].Nome = pAtualizado.Nome;
-            Produtos[i].Descricao = pAtualizado.Descricao;
-            Produtos[i].Status = pAtualizado.Status;
-            Produtos[i].Preco = pAtualizado.Preco;
+            produto.Nome = pAtualizado.Nome;
+            produto.Descricao = pAtualizado.Descricao;
+            produto.Status = pAtualizado.Status;
+            produto.Preco = pAtualizado.Preco;
+            produto.Quantidade = pAtualizado.Quantidade;
+            context.SaveChanges();
             return Results.Ok("Produto editado com suceso");
+        
         }
-    }
     return Results.NotFound("Produto não Encotrado");
 });
 

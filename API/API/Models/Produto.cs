@@ -1,4 +1,6 @@
-﻿namespace API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace API.Models;
 
 public class Produto
 {
@@ -14,9 +16,14 @@ public class Produto
     }
 
     public string? Id { get; set; }
+    // Data Annatations em C#
+    [Required(ErrorMessage = "Este campo é obrigaório!")]
     public string? Nome { get; set; }
+    [MinLength(7, ErrorMessage = "Este campo deve ter no minimo 7 caractres")]
+    [MaxLength(100, ErrorMessage = "Este campo deve ter no maximo 100 caractres")]
     public string? Descricao { get; set; }
     public string? Status { get; set; }
+    [Range(1, double.MaxValue , ErrorMessage = "Este produto deve estar entre 1R$")]
     public double Preco { get; set; }
     public int Quantidade { get; set; }
     public DateTime CriadoEm { get; set; }

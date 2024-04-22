@@ -6,10 +6,9 @@ POST http://localhost:5181/api/produtos/cadastrar
 Content-Type: application/json
 
 {
-    "nome": "Samsung",
-    "descricao": "J5 prime",
-    "status": "Active",
-    "preco": 400.99
+    "nome": "",
+    "descricao": "",
+    "preco": 20000
 }
 
 ### Buscar Produto 

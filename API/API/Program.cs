@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +16,31 @@ List<Produto> Produtos = new List<Produto>();
 
 app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto, [FromServices] AppDataContext context) =>
 {
-    //Adicionando o produto dentro da tabela do banco
-    context.Produtos.Add(produto);
-    context.SaveChanges();
-    return Results.Created("", produto);
+
+    //Validando os atributos da tabela no DB
+    List<ValidationResult> errors = new List<ValidationResult>();
+    if(!Validator.TryValidateObject(produto, new ValidationContext(produto), errors, true)){
+        return Results.BadRequest(errors);
+    }
+
+    Produto? produtoBuscado = context.Produtos.FirstOrDefault(x => x.Nome == produto.Nome);
+
+    if (produtoBuscado is null)
+    {
+        // produto.Nome = produto.Nome.ToUpper();
+        context.Produtos.Add(produto);
+        context.SaveChanges();
+        return Results.Created("Produto cadastrado com sucessos", produto);
+    }
+    return Results.BadRequest("Já existe um produto com este nome");
+
 });
 
 //GET  http://localhost:{porta}/api/produtos
-app.MapGet("/api/produtos/listar", ([FromServices] AppDataContext context) => {
+app.MapGet("/api/produtos/listar", ([FromServices] AppDataContext context) =>
+{
 
-    if(context.Produtos.Any()) return Results.Ok(context.Produtos.ToList());
+    if (context.Produtos.Any()) return Results.Ok(context.Produtos.ToList());
     return Results.NotFound("Produto não encontrado");
 
 });
@@ -34,12 +50,12 @@ app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome, [FromSer
 {
     Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
 
-        if (produto is not null)
-        {
-            context.Produtos.Remove(produto);
-            context.SaveChanges();
-            return Results.Ok("Produto removido com suceso");
-        }
+    if (produto is not null)
+    {
+        context.Produtos.Remove(produto);
+        context.SaveChanges();
+        return Results.Ok("Produto removido com suceso");
+    }
 
     return Results.NotFound("Produto não Encontrado");
 });
@@ -48,17 +64,18 @@ app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Pro
 {
     Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
 
-        if (produto is not null)
-        {
-            produto.Nome = pAtualizado.Nome;
-            produto.Descricao = pAtualizado.Descricao;
-            produto.Status = pAtualizado.Status;
-            produto.Preco = pAtualizado.Preco;
-            produto.Quantidade = pAtualizado.Quantidade;
-            context.SaveChanges();
-            return Results.Ok("Produto editado com suceso");
-        
-        }
+    if (produto is not null)
+    {
+        produto.Nome = pAtualizado.Nome;
+        produto.Descricao = pAtualizado.Descricao;
+        produto.Status = pAtualizado.Status;
+        produto.Preco = pAtualizado.Preco;
+        produto.Quantidade = pAtualizado.Quantidade;
+        context.Produtos.Update(produto);
+        context.SaveChanges();
+        return Results.Ok("Produto editado com suceso");
+
+    }
     return Results.NotFound("Produto não Encotrado");
 });
 
@@ -70,7 +87,7 @@ app.MapGet("/api/produtos/buscar/{nome}", ([FromRoute] string nome, [FromService
 
     if (produto is null) return Results.NotFound("Produto não Encotrado");
     return Results.Ok(produto);
-   
+
 });
 
 

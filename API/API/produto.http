@@ -6,8 +6,8 @@ POST http://localhost:5181/api/produtos/cadastrar
 Content-Type: application/json
 
 {
-    "nome": "",
-    "descricao": "",
+    "nome": "TV3",
+    "descricao": "DESCRIPTION3",
     "preco": 20000
 }
 

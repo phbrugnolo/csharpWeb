@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 //Registrar o serviço do banco de dados na aplicação
 builder.Services.AddDbContext<AppDataContext>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+       "AcessoTotal", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+    );
+});
 var app = builder.Build();
 
 
@@ -90,6 +96,5 @@ app.MapGet("/api/produtos/buscar/{nome}", ([FromRoute] string nome, [FromService
 
 });
 
-
-
+app.UseCors("AcessoTotal");
 app.Run();

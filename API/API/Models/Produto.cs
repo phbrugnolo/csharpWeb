@@ -8,7 +8,7 @@ public class Produto
     {
         Nome = nome;
         Descricao = descricao;
-        Status = status;
+        Status = "Ativo";
         Preco = preco;
         CriadoEm = DateTime.Now;
         Id = Guid.NewGuid().ToString();
@@ -19,7 +19,7 @@ public class Produto
     // Data Annatations em C#
     [Required(ErrorMessage = "Este campo é obrigaório!")]
     public string? Nome { get; set; }
-    [MinLength(7, ErrorMessage = "Este campo deve ter no minimo 7 caractres")]
+    [MinLength(3, ErrorMessage = "Este campo deve ter no mínimo 3 caractres")]
     [MaxLength(100, ErrorMessage = "Este campo deve ter no maximo 100 caractres")]
     public string? Descricao { get; set; }
     public string? Status { get; set; }

@@ -29,7 +29,7 @@ app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto, [FromServic
         return Results.BadRequest(errors);
     }
 
-    Produto? produtoBuscado = context.Produtos.FirstOrDefault(x => x.Nome == produto.Nome);
+    Produto? produtoBuscado = context.Produtos.FirstOrDefault(x => x.Id == produto.Id);
 
     if (produtoBuscado is null)
     {
@@ -38,7 +38,7 @@ app.MapPost("/api/produtos/cadastrar/", ([FromBody] Produto produto, [FromServic
         context.SaveChanges();
         return Results.Created("Produto cadastrado com sucessos", produto);
     }
-    return Results.BadRequest("Já existe um produto com este nome");
+    return Results.BadRequest("Já existe um produto com este ID");
 
 });
 
@@ -52,9 +52,9 @@ app.MapGet("/api/produtos/listar", ([FromServices] AppDataContext context) =>
 });
 
 // Deletando Produto
-app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome, [FromServices] AppDataContext context) =>
+app.MapDelete("/api/produtos/remover/{id}", ([FromRoute] string id, [FromServices] AppDataContext context) =>
 {
-    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Id == id);
 
     if (produto is not null)
     {
@@ -66,9 +66,9 @@ app.MapDelete("/api/produtos/remover/{nome}", ([FromRoute] string nome, [FromSer
     return Results.NotFound("Produto não Encontrado");
 });
 
-app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Produto pAtualizado, [FromServices] AppDataContext context) =>
+app.MapPut("/api/produtos/edit/{id}", ([FromRoute] string id, [FromBody] Produto pAtualizado, [FromServices] AppDataContext context) =>
 {
-    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Id == id);
 
     if (produto is not null)
     {
@@ -85,11 +85,11 @@ app.MapPut("/api/produtos/edit/{nome}", ([FromRoute] string nome, [FromBody] Pro
     return Results.NotFound("Produto não Encotrado");
 });
 
-//GET  http://localhost:{porta}/api/buscar{product.nome}
-app.MapGet("/api/produtos/buscar/{nome}", ([FromRoute] string nome, [FromServices] AppDataContext context) =>
+//GET  http://localhost:{porta}/api/buscar{product.id}
+app.MapGet("/api/produtos/buscar/{id}", ([FromRoute] string id, [FromServices] AppDataContext context) =>
 {
     //Endpoint com várias linhas de código 
-    Produto? produto = context.Produtos.FirstOrDefault(x => x.Nome == nome);
+    Produto? produto = context.Produtos.FirstOrDefault(x => x.Id == id);
 
     if (produto is null) return Results.NotFound("Produto não Encotrado");
     return Results.Ok(produto);

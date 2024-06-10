@@ -60,7 +60,7 @@ app.MapDelete("/api/produtos/remover/{id}", ([FromRoute] string id, [FromService
     {
         context.Produtos.Remove(produto);
         context.SaveChanges();
-        return Results.Ok("Produto removido com suceso");
+        return Results.Ok(context.Produtos.ToList());
     }
 
     return Results.NotFound("Produto não Encontrado");

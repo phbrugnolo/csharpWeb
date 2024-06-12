@@ -1,2 +1,2 @@
 # csharpWeb
-Repositório destinado aos arquivos web em C#
+CRUD completo de Produto usando Minimal APIs em C#
